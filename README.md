@@ -35,7 +35,6 @@ EzHire is a comprehensive, full-stack job portal designed to simulate a real-wor
 ### 🔐 Authentication
 - JWT-based authentication
 - Secure password hashing
-- Forgot Password / Reset Password flow
 
 ### 💳 Payments
 - Razorpay subscription integration
@@ -61,7 +60,7 @@ EzHire is a comprehensive, full-stack job portal designed to simulate a real-wor
 
 ## 🏗️ Architecture Overview
 
-The application follows a monolithic architecture, consolidating all core features into a single backend service to simplify the deployment process, reduce operational overhead, and provide faster internal communication.
+The application follows a monolithic architecture, consolidating all core features into a single backend service to simplify the deployment process and cost for deployment, reduce operational overhead, and provide faster internal communication.
 
 - **Frontend:** Provides a responsive, dynamic user interface with Next.js.
 - **Backend:** A unified Express application serving robust REST APIs for Authentication, User management, Job operations, and Payments.
