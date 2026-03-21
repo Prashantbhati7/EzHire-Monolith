@@ -152,7 +152,7 @@ const  CompanyPage= () => {
         setLoading(true);
         try{
             console.log("sending req to ",`${job_service}/api/company/${id}`);
-            const {data} = await axios.get(`${job_service}}/api/company/${id}`,{withCredentials:true});
+            const {data} = await axios.get(`${job_service}/api/company/${id}`,{withCredentials:true});
             console.log("fetched successufully ",data);
             setComapany(data.company);
             console.log("company is ",data.company);

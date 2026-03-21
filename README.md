@@ -1,17 +1,18 @@
-# 🚀 EzHire — Scalable Job Portal with Microservices
+# 🚀 EzHire — Modern Job Portal
 
-EzHire is a **microservices-based job portal** designed to simulate a real-world hiring platform with modular backend services and event-driven communication.
+EzHire is a comprehensive, full-stack job portal designed to simulate a real-world hiring platform, featuring a robust monolithic backend and an intuitive frontend interface.
 
 ---
 
 ## 📌 What This Project Demonstrates
 
-- Microservices architecture (Auth, User, Job, Payment)
-- Kafka-based event-driven communication (practical use-case)
+- Monolithic backend architecture for streamlined development and deployment
+- Unified REST APIs for core business logic
 - Full-stack system using Next.js + Node.js
 - Real-world flows like:
-  - Password reset
-  - Job application tracking
+  - User authentication and authorization
+  - Profile management (skills, experience, bio)
+  - Job posting and application tracking
   - Subscription payments
 
 ---
@@ -20,7 +21,7 @@ EzHire is a **microservices-based job portal** designed to simulate a real-world
 
 ### 👤 User
 - Register / Login
-- Profile (skills, experience, bio)
+- Profile Management
 - Apply to jobs
 - Track application status
 - AI Resume Analyzer
@@ -33,14 +34,11 @@ EzHire is a **microservices-based job portal** designed to simulate a real-world
 
 ### 🔐 Authentication
 - JWT-based authentication
+- Secure password hashing
 - Forgot Password / Reset Password flow
 
 ### 💳 Payments
 - Razorpay subscription integration
-
-### 📩 Notifications (Kafka)
-- Password reset emails
-- Job status updates
 
 ---
 
@@ -57,48 +55,25 @@ EzHire is a **microservices-based job portal** designed to simulate a real-world
 - TypeScript
 
 ### Infrastructure
-- PostgreSQL
-- Redis
-- Apache Kafka
+- Database (PostgreSQL)
 
 ---
 
 ## 🏗️ Architecture Overview
 
-- Each service runs independently  
-- Kafka is used for **event-based communication (notifications only)**  
-- REST APIs used for core business logic  
+The application follows a monolithic architecture, consolidating all core features into a single backend service to simplify the deployment process, reduce operational overhead, and provide faster internal communication.
 
-### Services:
-- Auth Service
-- User Service
-- Job Service
-- Payment Service
-- Kafka Utility (Consumer)
-
----
-
-## 🔄 Kafka Usage (Important)
-
-Kafka is **not used everywhere**, only for:
-
-- Password reset email triggering  
-- Job status update notifications  
-
-This keeps services loosely coupled and avoids blocking API calls.
+- **Frontend:** Provides a responsive, dynamic user interface with Next.js.
+- **Backend:** A unified Express application serving robust REST APIs for Authentication, User management, Job operations, and Payments.
 
 ---
 
 ## 📁 Project Structure
 
 ```
-frontend/
-services/
-  ├── auth/
-  ├── user/
-  ├── job/
-  ├── payment/
-  └── utils/
+.
+├── frontend/      # Next.js frontend application
+└── backend/       # Unified Express backend application
 ```
 
 ---
@@ -106,9 +81,7 @@ services/
 ## ⚙️ Prerequisites
 
 - Node.js (v18+)
-- PostgreSQL
-- Redis
-- Apache Kafka
+- Database
 - npm / yarn
 
 ---
@@ -118,8 +91,8 @@ services/
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/Prashantbhati7/EzHire.git
-cd ezhire
+git clone https://github.com/Prashantbhati7/EzHire-Monolith.git
+cd ezhire-monolith
 ```
 
 ---
@@ -133,9 +106,10 @@ cd frontend
 npm install
 ```
 
-#### Backend (run in each service)
+#### Backend
 
 ```bash
+cd backend
 npm install
 ```
 
@@ -143,37 +117,26 @@ npm install
 
 ### 3. Setup Environment Variables
 
-Each service requires:
+Create `.env` files in both `frontend` and `backend` directories.
 
-- PostgreSQL connection URL  
-- Kafka broker URL  
-- Redis URL  
+**Backend requires variables like:**
+- Database connection URL  
 - JWT Secret  
-- Razorpay keys (payment service)  
+- Razorpay keys (for payment service)
+- Server Port configuration
 
 ---
 
-### 4. Start Infrastructure
+### 4. Run the Application
 
-Ensure these are running:
-
-- PostgreSQL  
-- Redis  
-- Kafka + Zookeeper  
-
----
-
-### 5. Run Services
-
-Start each service:
+Start the backend server:
 
 ```bash
+cd backend
 npm run dev
 ```
 
----
-
-### 6. Run Frontend
+Start the frontend application (in a new terminal):
 
 ```bash
 cd frontend
@@ -182,19 +145,12 @@ npm run dev
 
 ---
 
-### 7. Open App
+### 5. Open App
 
+Visit the application at:
 ```
 http://localhost:3000
 ```
-
----
-
-## ⚠️ Notes
-
-- All services must run simultaneously  
-- Kafka must be configured correctly  
-- Missing env variables will break services  
 
 ---
 
