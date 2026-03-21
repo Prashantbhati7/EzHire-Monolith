@@ -2,7 +2,7 @@
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { UseAppData } from "@/context/appContext";
+import { job_service, UseAppData } from "@/context/appContext";
 import { Company, Job} from "@/type";
 import axios from "axios";
 import { Briefcase, Building2, Check, CheckCircle, Clock, DollarSign, Eye, FileText, Globe, Laptop, LocateIcon, MapPin, Pencil, Plus, Trash, Users, XCircle } from "lucide-react";
@@ -71,11 +71,12 @@ const  CompanyPage= () => {
                 isActive
             }
             
-            const {data} = await axios.post('http://localhost:5004/api/job',jobData,{withCredentials:true});
+            const {data} = await axios.post(`${job_service}/api/job`,jobData,{withCredentials:true});
             toast.success(data.message);
             clearData();
             setIsUpdatedModalOpen(false);
             addModalRef.current?.click();
+
             fetchCompany();
         }catch(error:any){
             toast.error( error.response?.data?.message ||"something went wrong !")
@@ -119,7 +120,7 @@ const  CompanyPage= () => {
                 is_active:isActive,
                 company_id:Number(id)
             }
-            const {data} = await axios.put(`http://localhost:5004/api/job/${selectedJob.job_id}`,updateData,{withCredentials:true});
+            const {data} = await axios.put(`${job_service}/api/job/${selectedJob.job_id}`,updateData,{withCredentials:true});
             toast.success(data.message);
             clearData();
             setIsUpdatedModalOpen(false);
@@ -135,7 +136,7 @@ const  CompanyPage= () => {
     const deleteHanlder = async(jobId:number)=>{
         setBtnLoading(true);
         try{
-            const {data} = await axios.delete(`http://localhost:5004/api/job/${jobId}`,{withCredentials:true});
+            const {data} = await axios.delete(`${job_service}/api/job/${jobId}`,{withCredentials:true});
             toast.success(data.message);
             fetchCompany();
         }catch(error:any){
@@ -150,7 +151,9 @@ const  CompanyPage= () => {
     const fetchCompany = async()=>{
         setLoading(true);
         try{
-            const {data} = await axios.get(`http://localhost:5004/api/company/${id}`,{withCredentials:true});
+            console.log("sending req to ",`${job_service}/api/company/${id}`);
+            const {data} = await axios.get(`${job_service}}/api/company/${id}`,{withCredentials:true});
+            console.log("fetched successufully ",data);
             setComapany(data.company);
             console.log("company is ",data.company);
         }catch(error:any){

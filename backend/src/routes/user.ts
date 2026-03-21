@@ -1,0 +1,18 @@
+import { Router } from "express";
+import { addSkill, applyForJob, getAllApplications, getUser, myProfile, removeSkill, updateProfilePic, updateResume, updateUserProfile } from "../controllers/user.controller.js";
+import { isAuth } from "../middleware/auth.js";
+import uploadFile from "../middleware/multer.js";
+
+const router = Router();
+
+router.route('/profile').get(isAuth,myProfile);
+router.route('/profile').patch(isAuth,updateUserProfile);
+router.route('/profile/pic').patch(isAuth,uploadFile,updateProfilePic);
+router.route('/resume').patch(isAuth,uploadFile,updateResume);
+router.route('/skills').patch(isAuth,addSkill);
+router.route('/skills/remove').post(isAuth,removeSkill);
+router.route('/job').post(isAuth,applyForJob)
+router.route('/job').get(isAuth,getAllApplications);
+router.route('/:userId').get(isAuth,getUser);
+
+export default router;
