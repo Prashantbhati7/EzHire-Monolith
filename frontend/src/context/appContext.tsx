@@ -159,10 +159,10 @@ const UseAppData = ():AppContextType =>{
     
 }
 
-export  const utils_service = "http://localhost:5002";
-export  const auth_service = "http://localhost:5002";
-export  const user_service = "http://localhost:5002";
-export  const job_service = "http://localhost:5002";
-export const payment_service = 'http://localhost:5002';
+export  const utils_service = process.env.NEXT_PUBLIC_BACKEND_URI;
+export  const auth_service = process.env.NEXT_PUBLIC_BACKEND_URI;
+export  const user_service = process.env.NEXT_PUBLIC_BACKEND_URI;
+export  const job_service = process.env.NEXT_PUBLIC_BACKEND_URI
+export const payment_service =  process.env.NEXT_PUBLIC_BACKEND_URI;
 
 export {AppContext,AppProvider,UseAppData}
