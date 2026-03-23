@@ -1,6 +1,8 @@
 import express, { json } from 'express'
 import {v2 as cloudinary} from 'cloudinary';
 import dotenv from 'dotenv';
+import { isAuth } from '../middleware/auth.js';
+import { rateLimiter } from '../middleware/rateLimiter.js';
 dotenv.config();
 
 const router = express.Router();
@@ -27,7 +29,13 @@ router.post('/upload', async(req,res)=>{
 import { GoogleGenAI } from '@google/genai';
 const ai = new GoogleGenAI({apiKey:process.env.GEMINI_API_KEY});
 
-router.post('/carrier',async(req,res)=>{
+const aiRateLimiter = rateLimiter({
+    windowMs: 60 * 1000, // 1 minute
+    max: 5,
+    keyPrefix: 'ai-service'
+});
+
+router.post('/carrier',aiRateLimiter, async(req,res)=>{
     try{
         const {skills} = req.body;
         if (!skills) {
@@ -80,8 +88,9 @@ router.post('/carrier',async(req,res)=>{
                 }
                 jsonResponse = JSON.parse(rawText);
                 res.status(200).json(jsonResponse);
-            }catch(error){
-                return res.status(500).json({"error":"Ai didn't return a valid json response"});
+            }catch(error:any){
+                console.log(error);
+                return res.status(500).json({"error":error.message});
             }
     }
     catch(error:any){ 
@@ -91,7 +100,7 @@ router.post('/carrier',async(req,res)=>{
 })
 
 
-router.post('/resume-analyser',async(req,res)=>{
+router.post('/resume-analyser',aiRateLimiter, async(req,res)=>{
     try{
         const {pdfBase64} =req.body;
         if(!pdfBase64) res.status(400).json({"message":"pdfBase64 is required "});

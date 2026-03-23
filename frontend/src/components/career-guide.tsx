@@ -56,9 +56,9 @@ const CareerGuide = () => {
         console.log("guidence reponse is ",response);
         setResponse(response.data);
         toast.success('Career Guidance Generated');
-      }catch(error){
+      }catch(error:any){
         console.log(error);
-        toast.error('Failed to generate Career Guidance')
+        toast.error(error?.response?.data?.message || "failed to give career guidance")
       }finally{
         setLoading(false);
       }

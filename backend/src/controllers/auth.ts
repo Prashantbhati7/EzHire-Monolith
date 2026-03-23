@@ -6,10 +6,11 @@ import { sql } from "../utils/db.js";
 import bcrypt from 'bcrypt';
 import getBuffer from "../utils/buffer.js";
 import axios from "axios";
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { forgotPasswordTemplate } from "../template.js";
 import { PublishToTopic } from "../producer.js";
 import { redisClient } from "../index.js";
+import { AuthenticatedRequest } from "../middleware/auth.js";
 
 
 
@@ -97,11 +98,13 @@ const registerUser = AsyncHandler(async(req,res,next)=>{
     return res.status(200).cookie('token',token,options).json({"user":userobj,"message":"User Logged In Successfully","token":token});
 })
 
-const logoutUser = AsyncHandler(async(req,res,next)=>{
+const logoutUser = AsyncHandler(async(req:AuthenticatedRequest,res,next)=>{
+    const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
     const options = {
         httpOnly:true,
         secure:process.env.NODE_ENV === 'production',
     }
+    redisClient.set(`logout:${token}`,token,{EX:15*60*60*24});
     return res.status(200).clearCookie('token',options).json({"message":"User Logged Out Successfully"});
 });
 
