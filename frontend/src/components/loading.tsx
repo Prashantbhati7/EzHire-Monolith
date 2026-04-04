@@ -1,6 +1,3 @@
-
-"use client"
-
 import { Hourglass } from 'ldrs/react'
 import 'ldrs/react/Hourglass.css'
 
