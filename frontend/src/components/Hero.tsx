@@ -16,15 +16,15 @@ const Hero = () => {
         raysOrigin="top-center"
         raysColor='#C5A6F7'
         raysSpeed={1}
-        lightSpread={0.2}
-        rayLength={2}
+        lightSpread={0.3}
+        rayLength={4}
         followMouse={true}
         mouseInfluence={0.6}
         noiseAmount={0}
         distortion={0}
         className="custom-rays"
         pulsating={false}
-        fadeDistance={0.4}
+        fadeDistance={0.6}
         saturation={1}
     />
     </div>
