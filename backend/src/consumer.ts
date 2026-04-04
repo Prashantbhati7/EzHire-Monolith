@@ -7,7 +7,7 @@ dotenv.config();
 
 const startSendMailConsumer =  async()=>{
     try{
-        console.log("BROKER VALUE:", process.env.KAFKA_BROKER);
+        
 
         const kafka = new Kafka({
             clientId:'mail-service',
