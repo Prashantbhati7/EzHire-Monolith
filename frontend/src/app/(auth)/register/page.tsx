@@ -62,7 +62,7 @@ const RegisterPage = () => {
           setIsAuth(true);
           setLoading(false);
           toast.success(response.data.message);
-          Cookies.set('token', response.data.token,{expires: 15,secure:true,path:'/'});
+          // Cookies.set('token', response.data.token,{expires: 15,secure:true,path:'/'});
           setEmail("");
           setPassword("");
           // redirect('/');
