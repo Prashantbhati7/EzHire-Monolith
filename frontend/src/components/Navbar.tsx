@@ -10,7 +10,7 @@ import { ModeToggle } from "./mode-toggle";
 import { UseAppData } from "@/context/appContext";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import Cookies from "js-cookie";
 const Navbar = () => {
     const [isOpen,setIsOpen] = useState(false);
     const toggleOpen = ()=>{
@@ -18,6 +18,7 @@ const Navbar = () => {
     }
     const {isAuth,setIsAuth,logout,setUser,user,loading,setLoading} = UseAppData();
     const logOutHandler = async()=>{
+        Cookies.remove('token');
         await logout();
         
     }

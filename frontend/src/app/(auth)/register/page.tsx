@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
+import Cookies from 'js-cookie';
 import { Label } from "@/components/ui/label";
 import { ArrowRight,  Lock, Mail, NotebookIcon, PenIcon, PhoneCall, User } from "lucide-react";
 import Link from "next/link";
@@ -61,7 +62,7 @@ const RegisterPage = () => {
           setIsAuth(true);
           setLoading(false);
           toast.success(response.data.message);
-          // Cookies.set('token', response.data.token,{expires: 15,secure:true,path:'/'});
+          Cookies.set('token', response.data.token,{expires: 15,secure:true,path:'/'});
           setEmail("");
           setPassword("");
           // redirect('/');
