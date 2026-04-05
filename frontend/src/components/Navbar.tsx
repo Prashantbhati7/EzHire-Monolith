@@ -18,7 +18,7 @@ const Navbar = () => {
     }
     const {isAuth,setIsAuth,logout,setUser,user,loading,setLoading} = UseAppData();
     const logOutHandler = async()=>{
-        Cookies.remove('token');
+        // Cookies.remove('token');
         await logout();
         
     }
