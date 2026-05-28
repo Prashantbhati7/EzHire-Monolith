@@ -3,7 +3,7 @@ import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UseAppData } from "@/context/appContext";
+import { UseAppData, auth_service } from "@/context/appContext";
 import axios from "axios";
 import { User } from "lucide-react";
 import Link from "next/link";
@@ -28,7 +28,7 @@ const ForgotPage = () => {
         }
         setBtnLoading(true);
         try{
-            const {data} = await axios.post('http://localhost:5002/api/auth/forgot-password',{email});
+            const {data} = await axios.post(`${auth_service}/api/auth/forgot-password`,{email});
             toast.success(data?.message || "If an account with that email exists, you'll receive reset instructions.");
             setEmail("");
             router.push('/')
