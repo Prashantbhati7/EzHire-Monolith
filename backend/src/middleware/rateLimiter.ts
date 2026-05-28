@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { redisClient } from '../index.js';
+import { redisClient } from '../utils/redis.js';
 import { AuthenticatedRequest } from './auth.js';
 
 interface RateLimiterOptions {

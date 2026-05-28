@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Loading from "@/components/loading";
 import { Select,SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { form } from "motion/react-client";
 
 const RegisterPage = () => {
     const [email,setEmail] = useState("");
@@ -39,7 +40,7 @@ const RegisterPage = () => {
       formData.append('password',password);
       formData.append('phone_number',phone);
       formData.append('role',role);
-      
+      console.log("formdata initally is ",formData);
       if (role=='jobseeker'){
         if (resume) {
           formData.append('file', resume);

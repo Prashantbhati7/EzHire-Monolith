@@ -5,7 +5,6 @@ import userRoutes from './routes/user.js';
 import paymentRoutes from './routes/payment.js';
 import utilsRoutes from './routes/utilsRoute.js';
 import ApiError from './utils/ApiError.js';
-import { connectKafka } from './producer.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
@@ -14,8 +13,6 @@ app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true, methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-connectKafka();
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);

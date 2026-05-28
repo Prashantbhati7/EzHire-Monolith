@@ -1,6 +1,6 @@
 import app from './app.js'
 
-import { createClient } from 'redis';
+import { redisClient } from './utils/redis.js';
 import dotenv from 'dotenv';
 import { sql } from './utils/db.js';
 import { v2 as cloudinary } from 'cloudinary';
@@ -21,12 +21,6 @@ cloudinary.config({
 
 startSendMailConsumer();
 
-
-export const redisClient = createClient({
-    url:process.env.REDIS_URL
-})
-
-redisClient.connect().then(()=> console.log("Redis connected successfully")).catch((error)=>console.error("Failed to connect Redis : ",error))
 
 async function initDb(){
     try{

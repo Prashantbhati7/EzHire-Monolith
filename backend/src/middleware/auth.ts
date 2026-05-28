@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import { sql } from "../utils/db.js";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import ApiError from "../utils/ApiError.js";
-import { redisClient } from "../index.js";
+import { redisClient } from "../utils/redis.js";
 
 interface User {
     user_id:number,

@@ -1,52 +1,75 @@
-import { Kafka } from "kafkajs";
+import { createRedisClient } from './utils/redis.js';
 import nodemailer from 'nodemailer';
-
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 dotenv.config();
 
+const startSendMailConsumer = async () => {
+    const consumerClient = createRedisClient();
 
-const startSendMailConsumer =  async()=>{
-    try{
-        
+    try {
+        await consumerClient.connect();
+        console.log("Mail service Redis consumer connected successfully");
+        console.log("Mail service consumer started listening for sending mail via Redis");
+    } catch (error) {
+        console.error("Failed to connect Redis consumer:", error);
+        return;
+    }
 
-        const kafka = new Kafka({
-            clientId:'mail-service',
-            brokers:[process.env.KAFKA_BROKER || "localhost:9092"],
-        });
-        const consumer = kafka.consumer({groupId:'mail-service-group'})
-        await consumer.connect();
-        const topicName = "send-mail";     // message will come with this name 
-        await consumer.subscribe({topic:topicName,fromBeginning:false})
-        console.log("Mail service consumer started listening for sending mail ");
-        await consumer.run({
-            eachMessage:async({topic,partition,message})=>{
-                try{
-                    const {to,subject , html} = JSON.parse(message.value?.toString() || "{}");
-                    const transporter = nodemailer.createTransport({
-                        host:"smtp.gmail.com",
-                        port:465,
-                        secure:true,
-                        auth:{
-                            user:process.env.SMTP_USER,
-                            pass:process.env.SMTP_PASSWORD       // google account app passwords 
+    const queueKey = "queue:send-mail";
+    
+    // Asynchronous worker loop running in the background
+    (async () => {
+        while (true) {
+            try {
+                // brPop takes the queue key and timeout in seconds.
+                // Using 20 seconds helps to prevent Upstash from closing inactive connections.
+                const result = await consumerClient.brPop(queueKey, 20);
+                if (result) {
+                    const { element } = result;
+                    try {
+                        const { to, subject, html } = JSON.parse(element);
+                        if (!to || !subject || !html) {
+                            console.warn("Invalid email message structure:", element);
+                            continue;
                         }
-                    });
-                    await transporter.sendMail({
-                        from:"EzHire <no-reply>",
-                        to,
-                        subject,
-                        html
-                    })
-                    console.log("mail has been sent to ",to)
-                }catch(error){
+                        
+                        const transporter = nodemailer.createTransport({
+                            host: "smtp.gmail.com",
+                            port: 465,
+                            secure: true,
+                            auth: {
+                                user: process.env.SMTP_USER,
+                                pass: process.env.SMTP_PASSWORD // Google Account App Passwords
+                            }
+                        });
 
-                    console.log("Failed to send Mail :  ",error)
+                        await transporter.sendMail({
+                            from: "EzHire <no-reply>",
+                            to,
+                            subject,
+                            html
+                        });
+                        console.log("Mail has been sent to", to);
+                    } catch (err) {
+                        console.error("Failed to process queue message or send email:", err);
+                    }
+                }
+            } catch (error) {
+                console.error("Error in Redis consumer loop:", error);
+                // Wait 5 seconds before retrying in case of connection drop
+                await new Promise((resolve) => setTimeout(resolve, 5000));
+                
+                if (!consumerClient.isOpen) {
+                    try {
+                        console.log("Attempting to reconnect Redis consumer...");
+                        await consumerClient.connect();
+                    } catch (reconErr) {
+                        console.error("Failed to reconnect Redis consumer:", reconErr);
+                    }
                 }
             }
-        })
-    }
-    catch(error){
-        console.log("Failed to Start Kafka : ",error);
-    }
-}
+        }
+    })();
+};
+
 export default startSendMailConsumer;

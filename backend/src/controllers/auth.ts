@@ -9,12 +9,13 @@ import axios from "axios";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { forgotPasswordTemplate } from "../template.js";
 import { PublishToTopic } from "../producer.js";
-import { redisClient } from "../index.js";
+import { redisClient } from "../utils/redis.js";
 import { AuthenticatedRequest } from "../middleware/auth.js";
 
 
 
-const registerUser = AsyncHandler(async(req,res,next)=>{
+const registerUser = AsyncHandler(async(req,res,next)=>{    
+
     const {name,email,password,phone_number,role,bio} = req.body;
     if (!email || !password || !name || !phone_number || !role ) throw new ApiError(400,"All fields are required")
     const existingUser = await sql`SELECT * FROM users WHERE email = ${email}`;
