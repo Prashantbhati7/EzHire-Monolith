@@ -13,7 +13,7 @@ import toast from 'react-hot-toast';
 
 const JobPage = () => {
     const {id} = useParams();
-    const {user,isAuth,applyJob,applications,btnloading} = UseAppData();
+    const {user,isAuth,applyJob,fetchApplications,applications,btnloading} = UseAppData();
     const router = useRouter();
     const [job,setJob] = useState<Job | null>(null);
     const [applied,setApplied]= useState(true);
@@ -53,9 +53,11 @@ const JobPage = () => {
 
     const [load,setload] = useState(true);
     useEffect(()=>{
+        console.log("applications are ",applications)
         if (applications && id){
                 applications.forEach((item:any)=>{
-                    if (item.job_id.toString()===id){
+                    if (item.job_id.toString() ===id){
+                        console.log("application's job id = id")
                         setApplied(true)
                 }
         })
@@ -67,6 +69,7 @@ const JobPage = () => {
     useEffect(()=>{
         if (user && job && user.user_id === job.posted_by_recruiter_id){
             fetchJobApplications();
+            fetchApplications();
         }
     },[user,job])
     const [filterStatus,setFilterStatus] = useState("All");

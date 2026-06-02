@@ -15,8 +15,8 @@ import { Input } from "@/components/ui/input";
 import Loading from "@/components/loading";
 
 const Page = () => {
-    const [email,setEmail] = useState("");
-    const [password,setPassword] = useState("");
+    const [email,setEmail] = useState("testuser@gmail.com");
+    const [password,setPassword] = useState("testpass");
     const [BtnLoading,setBtnLoading] = useState(false);
     const {isAuth,setUser,loading,setIsAuth,setLoading ,fetchApplications}= UseAppData();
         if (loading) return <Loading/>
@@ -98,6 +98,9 @@ const Page = () => {
             <div className="mt-6 pt-6 border-t border-gray-400">
               <p className="text-center text-md">Don&apos;t have an Account? <Link className="text-blue-500 font-medium hover:underline transition-all" href={'/register'}> Create a new Account? </Link> </p>
             </div>
+          <p className="text-orange-400" >This is a test jobseeker user , You can log in with this to check application </p>
+          <p>for Recruiter Login : email - vikram.hiring@innovatex.com </p>
+          <p>password- Vikram@123 </p>
           </div>
         </div>
     </div>
