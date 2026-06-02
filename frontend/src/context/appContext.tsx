@@ -8,9 +8,21 @@ import toast, { Toaster } from "react-hot-toast";
 const AppContext = createContext<AppContextType| undefined >(undefined);
 
 const AppProvider:React.FC<AppProviderProps> = ({children})=>{
-    const [user,setUser] = useState<User |null>(null);
+    const [user,setUser] = useState<User |null>( {
+    user_id: 4,
+    name: "Prashant Bhati",
+    email: "prashantbhati774@gmail.com",
+    password: "", // not provided
+    phone_number: "9310243800",
+    role: "jobseeker",
+    bio: "hey I am a software developer, I am looking for jobs",
+    resume: "https://res.cloudinary.com/dbgo4fitk/image/upload/v1774102124/oigvxmkjentcwmcet5lq.pdf",
+    profile_pic: "https://res.cloudinary.com/dbgo4fitk/image/upload/v1774084825/phmzmryez4tyxqrvoss9.jpg",
+    skills: ["react", "html", "css"],
+    subscription: "2026-04-16T10:44:26.001Z"
+});
     const [isAuth,setIsAuth] = useState<boolean>(false);
-    const [loading,setLoading] = useState<boolean>(true);
+    const [loading,setLoading] = useState<boolean>(false);
     const [btnloading,setBtnLoading] = useState<boolean>(false);
     const fetchUser = async()=>{
         setLoading(true);
@@ -138,8 +150,8 @@ const AppProvider:React.FC<AppProviderProps> = ({children})=>{
 
 
     useEffect(()=>{
-        fetchUser();
-        fetchApplications();
+        //fetchUser();
+        //fetchApplications();
     },[])
     return(
         <AppContext.Provider value={{user,setUser,btnloading,isAuth,setIsAuth,loading,setLoading,logout,fetchUser,updateProfilePic,updateResume,updateUser,addSkill,removeSkill,applyJob,applications,fetchApplications}}>
