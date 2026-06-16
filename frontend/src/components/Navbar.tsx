@@ -27,13 +27,12 @@ const Navbar = () => {
     <nav className="z-50 sticky top-0 bg-backgroud/80 border-b backdrop-blur-md shadow-sm ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="flex justify-between items-center h-16 ">
-            {/* Logo Left side */ }
             <div className="flex items-center">
                 <Link href="/" className="flex items-center gap-1 group">
                     <div className="font-bold text-red-500 text-2xl tracking-tight">Ez<span className="bg-linear-to-r from-blue-500 via-red-400 to-blue-800 text-clip bg-clip-text text-transparent">Hire</span></div>
                 </Link>
             </div>
-            {/* Desktop Navigation */}
+
             <div className="hidden md:flex items-center space-x-1 ">
                 <Link href={'/'}>
                     <Button variant="ghost" className="flex items-center font-medium cursor-pointer"> <Home size={16}></Home>Home</Button>
@@ -45,7 +44,7 @@ const Navbar = () => {
                   <Button variant={"ghost"} className="flex items-center font-medium cursor-pointer"><Info size={16}></Info> About</Button>
                 </Link>
             </div>
-            {/* right side Actions */}
+
             <div className="hidden md:flex items-center gap-3">
                  { loading ?<div> <Loader2Icon className="animate-spin"/>  </div>: isAuth ? (<Popover>
                     <PopoverTrigger asChild>
@@ -71,14 +70,13 @@ const Navbar = () => {
                  </Popover>) : (<Link href={'/login'}> <Button variant={"ghost"} className="cursor-pointer font-medium text-sm"> <User size={16}></User> SignIn </Button> </Link>) }
                  <ModeToggle/>
             </div>
-            {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center gap-3">
                 <ModeToggle/>
                 <Button variant={"ghost"}  className="cursor-pointer hover:bg-accent" aria-label="Toggle Menu"  onClick={toggleOpen}> {isOpen?<><X size={16}/> </>:<> <MenuIcon size={16}></MenuIcon> </>} </Button>
             </div>
         </div>
       </div>
-      {/* Mobile View */}
+
       <div className={`md:hidden border-t overflow-hidden transition-all duration-300 ease-in-out ${isOpen?"max-h-96 opacity-100":"max-h-0 opacity-0"}`}>
             <div className="px-3 py-2 space-y-1 bg-background/90 backdrop-blur-md">
                     <Link href={'/'} onClick={toggleOpen}> <Button variant={"ghost"} className="w-full justify-start gap-3 h-11 cursor-pointer font-medium text-sm"> <Home size={16}></Home>Home</Button> </Link>
