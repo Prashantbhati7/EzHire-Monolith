@@ -22,7 +22,6 @@ app.use('/api', jobRoutes);
 
 
 app.use((err:ApiError,req:express.Request,res:express.Response,next:express.NextFunction)=>{
-    console.dir(err,{depth:null});
     return res.status(err.statusCode || 500).json({message:err.message})
 })
 export default app;

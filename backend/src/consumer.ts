@@ -1,10 +1,7 @@
 import { createRedisClient } from './utils/redis.js';
 import nodemailer from 'nodemailer';
-import dns from 'dns';
 import dotenv from 'dotenv';
 dotenv.config();
-
-dns.setDefaultResultOrder('ipv4first');
 
 const startSendMailConsumer = async () => {
     const consumerClient = createRedisClient();
@@ -38,14 +35,13 @@ const startSendMailConsumer = async () => {
                         
                         const transporter = nodemailer.createTransport({
                             host: "smtp.gmail.com",
-                            port: 587,
-                            secure: false,
-                            requireTLS: true,
+                            port: 465,
+                            secure: true,
                             auth: {
                                 user: process.env.SMTP_USER,
                                 pass: process.env.SMTP_PASSWORD // Google Account App Passwords
                             }
-                        } as any);
+                        });
 
                         await transporter.sendMail({
                             from: "EzHire <no-reply>",

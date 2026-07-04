@@ -100,13 +100,21 @@ const getCompanyDetails = AsyncHandler(async(req:AuthenticatedRequest,res,next)=
 })
 
 const getAllActiveJobs = AsyncHandler(async(req,res,next)=>{
-    try {
-        const result = await sql`SELECT NOW()`;
-        console.log(result);
-        res.json(result);
-    } catch (err) {
-        console.error(err);
+    const {title,location} = req.query as {title?:string,location?:string};
+    let query = `SELECT j.job_id,j.title,j.description,j.salary,j.location,j.job_type,j.role,j.work_location,c.name AS company_name,c.logo AS company_logo,c.company_id AS company_id,j.created_at FROM jobs j JOIN companies c ON j.company_id = c.company_id WHERE j.is_active = true`;
+    const values = [];
+    let paramIndex = 1;
+    if (title) {
+        values.push(`%${title}%`);
+        query += ` AND j.title ILIKE $${paramIndex++}`;
     }
+    if (location) {
+        values.push(`%${location}%`);
+        query += ` AND j.location ILIKE $${paramIndex++}`;
+    }
+    query += ` ORDER BY j.created_at DESC`;
+    const jobs = await sql.query(query,values) as any;
+    return res.status(200).json({"message":"Jobs Fetched Successfully","jobs":jobs});
 })
 
 const getSingleJob = AsyncHandler(async(req,res,next)=>{
