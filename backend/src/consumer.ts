@@ -36,8 +36,9 @@ const startSendMailConsumer = async () => {
                         
                         const transporter = nodemailer.createTransport({
                             host: "smtp.gmail.com",
-                            port: 465,
-                            secure: true,
+                            port: 587,
+                            secure: false,
+                            requireTLS: true,
                             lookup: (hostname: string, options: any, callback: any) => {
                                 dns.lookup(hostname, { family: 4 }, callback);
                             },
