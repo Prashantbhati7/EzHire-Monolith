@@ -4,6 +4,8 @@ import dns from 'dns';
 import dotenv from 'dotenv';
 dotenv.config();
 
+dns.setDefaultResultOrder('ipv4first');
+
 const startSendMailConsumer = async () => {
     const consumerClient = createRedisClient();
 
@@ -39,9 +41,6 @@ const startSendMailConsumer = async () => {
                             port: 587,
                             secure: false,
                             requireTLS: true,
-                            lookup: (hostname: string, options: any, callback: any) => {
-                                dns.lookup(hostname, { family: 4 }, callback);
-                            },
                             auth: {
                                 user: process.env.SMTP_USER,
                                 pass: process.env.SMTP_PASSWORD // Google Account App Passwords
