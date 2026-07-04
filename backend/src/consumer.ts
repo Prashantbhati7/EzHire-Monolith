@@ -1,5 +1,6 @@
 import { createRedisClient } from './utils/redis.js';
 import nodemailer from 'nodemailer';
+import dns from 'dns';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -37,11 +38,14 @@ const startSendMailConsumer = async () => {
                             host: "smtp.gmail.com",
                             port: 465,
                             secure: true,
+                            lookup: (hostname: string, options: any, callback: any) => {
+                                dns.lookup(hostname, { family: 4 }, callback);
+                            },
                             auth: {
                                 user: process.env.SMTP_USER,
                                 pass: process.env.SMTP_PASSWORD // Google Account App Passwords
                             }
-                        });
+                        } as any);
 
                         await transporter.sendMail({
                             from: "EzHire <no-reply>",
