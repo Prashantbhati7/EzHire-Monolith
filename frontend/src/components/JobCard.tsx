@@ -4,7 +4,7 @@ import { UseAppData } from '@/context/appContext'
 import { Job } from '@/type'
 import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader } from './ui/card'
-import { ArrowRight, Briefcase, Building2, CheckCircle, DollarSign, MapPin } from 'lucide-react'
+import { ArrowRight, Briefcase, Building2, CheckCircle, DollarSign, IndianRupee, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from './ui/button'
 interface JobCardProps {
@@ -54,7 +54,7 @@ const JobCard:React.FC<JobCardProps> = ({job}) => {
                     </div>
                 </div>
                 <div className='flex items-center gap-2 text-base font-semibold'>
-                    <DollarSign size={18} className='text-gray-300'/>
+                    <IndianRupee size={18} className='text-gray-300'/>
                     <span>{job.salary}</span>
                 </div>
             </div>

@@ -13,15 +13,15 @@ import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 const Navbar = () => {
     const [isOpen,setIsOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
     const toggleOpen = ()=>{
         setIsOpen(!isOpen);
     }
     const {isAuth,setIsAuth,logout,setUser,user,loading,setLoading} = UseAppData();
     const logOutHandler = async()=>{
-        // Cookies.remove('token');
         await logout();
-        
     }
+    useEffect(() => { setMounted(true); }, []);
  return (
    
     <nav className="z-50 sticky top-0 bg-backgroud/80 border-b backdrop-blur-md shadow-sm ">
@@ -46,7 +46,11 @@ const Navbar = () => {
             </div>
 
             <div className="hidden md:flex items-center gap-3">
-                 { loading ?<div> <Loader2Icon className="animate-spin"/>  </div>: isAuth ? (<Popover>
+                 { !mounted ? (
+                     <div className="h-9 w-9" />
+                 ) : loading ? (
+                     <div><Loader2Icon className="animate-spin"/></div>
+                 ) : isAuth ? (<Popover>
                     <PopoverTrigger asChild>
                         <button className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                             <Avatar className="h-9 w-9 ring-2 ring-offset-2 ring-offset-background ring-blue-500/20 cursor-pointer hover:ring-blue-500/40 transition-all">

@@ -16,7 +16,7 @@ const JobPage = () => {
     const {user,isAuth,applyJob,fetchApplications,applications,btnloading} = UseAppData();
     const router = useRouter();
     const [job,setJob] = useState<Job | null>(null);
-    const [applied,setApplied]= useState(true);
+    const [applied,setApplied]= useState(false);
 
     const applyJobHandler = async(id:number)=>{
             await applyJob(id)
@@ -50,10 +50,17 @@ const JobPage = () => {
             console.log(error);
         }
     }
-
+    
+    
+    
+    useEffect(()=>{
+        if (user && job && user.user_id === job.posted_by_recruiter_id){
+            fetchJobApplications();
+            fetchApplications();
+        }
+    },[user,job])
     const [load,setload] = useState(true);
     useEffect(()=>{
-        console.log("applications are ",applications)
         if (applications && id){
                 applications.forEach((item:any)=>{
                     if (item.job_id.toString() ===id){
@@ -65,13 +72,6 @@ const JobPage = () => {
         setload(false);
     },[applications,id]) 
 
-
-    useEffect(()=>{
-        if (user && job && user.user_id === job.posted_by_recruiter_id){
-            fetchJobApplications();
-            fetchApplications();
-        }
-    },[user,job])
     const [filterStatus,setFilterStatus] = useState("All");
     const filteredApplications = filterStatus ==='All' ? jobApplications :
     jobApplications.filter((app)=>app.status==filterStatus);

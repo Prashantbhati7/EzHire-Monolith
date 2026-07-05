@@ -27,8 +27,10 @@ const persistUser = (u: User | null) => {
 
 
 const AppProvider:React.FC<AppProviderProps> = ({children})=>{
-    const [user, setUserState] = useState<User | null>(loadCachedUser);    // local cache 
-    const [isAuth, setIsAuth] = useState<boolean>(() => loadCachedUser() !== null);
+    // Start with null/false so SSR and initial client render match exactly.
+    // After mount, we hydrate from localStorage — this is safe and avoids hydration errors.
+    const [user, setUserState] = useState<User | null>(null);
+    const [isAuth, setIsAuth] = useState<boolean>(false);
     const [loading,setLoading] = useState<boolean>(false);
     const [btnloading,setBtnLoading] = useState<boolean>(false);
 
@@ -39,6 +41,15 @@ const AppProvider:React.FC<AppProviderProps> = ({children})=>{
             return next;
         });
     };
+
+    // Restore from localStorage after mount (client-only, avoids SSR mismatch)
+    useEffect(() => {
+        const cached = loadCachedUser();
+        if (cached) {
+            setUserState(cached);
+            setIsAuth(true);
+        }
+    }, []);
 
     const fetchUser = async()=>{
         setLoading(true);
