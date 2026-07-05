@@ -1,5 +1,4 @@
 "use client";
-
 import { AppProviderProps,AppContextType ,User, Application } from "@/type";
 import axios from "axios";
 
@@ -7,38 +6,54 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 const AppContext = createContext<AppContextType| undefined >(undefined);
 
+
+const USER_CACHE_KEY = 'ezhire_user';
+
+const loadCachedUser = (): User | null => {
+    try {
+        const raw = localStorage.getItem(USER_CACHE_KEY);
+        return raw ? (JSON.parse(raw) as User) : null;
+    } catch {
+        return null;
+    }
+};
+
+const persistUser = (u: User | null) => {
+    try {
+        if (u) localStorage.setItem(USER_CACHE_KEY, JSON.stringify(u));
+        else localStorage.removeItem(USER_CACHE_KEY);
+    } catch { }
+};
+
+
 const AppProvider:React.FC<AppProviderProps> = ({children})=>{
-    const [user,setUser] = useState<User |null>( {
-    user_id: 4,
-    name: "Prashant Bhati",
-    email: "prashantbhati774@gmail.com",
-    password: "", // not provided
-    phone_number: "9310243800",
-    role: "jobseeker",
-    bio: "hey I am a software developer, I am looking for jobs",
-    resume: "https://res.cloudinary.com/dbgo4fitk/image/upload/v1774102124/oigvxmkjentcwmcet5lq.pdf",
-    profile_pic: "https://res.cloudinary.com/dbgo4fitk/image/upload/v1774084825/phmzmryez4tyxqrvoss9.jpg",
-    skills: ["react", "html", "css"],
-    subscription: "2026-04-16T10:44:26.001Z"
-});
-    const [isAuth,setIsAuth] = useState<boolean>(false);
+    const [user, setUserState] = useState<User | null>(loadCachedUser);    // local cache 
+    const [isAuth, setIsAuth] = useState<boolean>(() => loadCachedUser() !== null);
     const [loading,setLoading] = useState<boolean>(false);
     const [btnloading,setBtnLoading] = useState<boolean>(false);
+
+    const setUser: React.Dispatch<React.SetStateAction<User | null>> = (value) => {
+        setUserState(prev => {
+            const next = typeof value === 'function' ? value(prev) : value;
+            persistUser(next);
+            return next;
+        });
+    };
+
     const fetchUser = async()=>{
         setLoading(true);
         try{
             const response = await axios.get(`${user_service}/api/user/profile` ,{withCredentials:true});
             console.log("response is ",response);
-            setUser(response.data.user);
+            const freshUser = response.data.user as User;
+            setUser(freshUser);
             setIsAuth(true);
             return;
     }catch(error){
         console.log("error in fetching user ",error);
-        setIsAuth(false);
         return;
     }finally{
         setLoading(false);
-        
     }
     }
     const updateProfilePic = async(formData:any)=>{
@@ -46,7 +61,7 @@ const AppProvider:React.FC<AppProviderProps> = ({children})=>{
         try{
             const {data} = await axios.patch(`${user_service}/api/user/profile/pic`,formData,{withCredentials:true});
             toast.success(data.message);
-            fetchUser();    // it will updata the user states to new updated one 
+            fetchUser();  
         }catch(error:any){
             toast.error(error.response.data.message || "Something went wrong");
         }
@@ -59,7 +74,7 @@ const AppProvider:React.FC<AppProviderProps> = ({children})=>{
         try{
             const {data} = await axios.patch(`${user_service}/api/user/resume`,formData,{withCredentials:true});
             toast.success(data.message);
-            fetchUser();    // it will updata the user states to new updated one 
+            fetchUser();  
         }catch(error:any){
             toast.error(error.response.data.message || 'something went wrong');
         }
@@ -87,7 +102,7 @@ const AppProvider:React.FC<AppProviderProps> = ({children})=>{
             const {data} = await axios.patch(`${user_service}/api/user/skills`,{skill},{withCredentials:true});
             toast.success(data.message);
             setSkill("");
-            fetchUser();    // it will updata the user states to new updated one 
+            fetchUser();   
         }catch(error:any){
             console.log(error);
             toast.error(error.response.data.message || 'something went wrong');
@@ -118,7 +133,7 @@ const AppProvider:React.FC<AppProviderProps> = ({children})=>{
             toast.error(error.response.data.message || 'something went wrong');
         }
         finally{
-            setUser(null);
+            setUser(null);  
             setIsAuth(false);
             setLoading(false);
         }
